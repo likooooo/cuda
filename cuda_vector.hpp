@@ -3,6 +3,7 @@
 #include <vector>
 #include <array>
 #include <type_traits>
+#include <cstring>
 // #include "model/Images.h"
 #include "cuda_helper.hpp"
 
@@ -138,8 +139,11 @@ struct SyncProxy
     // TODO : proxy operator
 };
 
-template<class T, class TAlloc1, class TAlloc2> inline auto operator << (std::vector<T, TAlloc1>& dest, const std::vector<T, TAlloc2>& src){
-    cuda::resize(dest, src.size());
+template<class TAlloc1, class TAlloc2> inline auto operator << (std::vector<typename TAlloc1::value_type, TAlloc1>& dest, const std::vector<typename TAlloc2::value_type, TAlloc2>& src){
+    using T = typename TAlloc2::value_type;
+    using T2 = typename TAlloc1::value_type;
+
+    cuda::resize(dest, src.size() * sizeof(T)/ sizeof(T2));
     constexpr bool has_device = cuda::is_device_vec_v<TAlloc1> || cuda::is_device_vec_v<TAlloc2>;
     constexpr bool has_pinned = cuda::is_pinned_vec_v<TAlloc1> || cuda::is_pinned_vec_v<TAlloc2>;
 
@@ -153,5 +157,13 @@ template<class T, class TAlloc1, class TAlloc2> inline auto operator << (std::ve
     } 
     else {
         CUDA_RT_CALL(cudaMemcpy(dest.data(), src.data(), sizeof(T) * src.size(), cudaMemcpyDefault));
+    }
+}
+
+template<class T>inline void crop_image(T* pOut, const int ostride, const T* pIn, const int istride, const int sizex, const int sizey)
+{
+    //  cblas_scopy_batch_strided(sizex, pIn, 1, istride, pOut, 1, ostride, sizey);
+    for(int y = 0; y < sizey; y++, pOut += ostride, pIn += istride){
+        std::memcpy(pOut, pIn, sizex * sizeof(T));
     }
 }

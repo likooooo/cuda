@@ -1,4 +1,8 @@
 #pragma once
+//== turn debug on in test framework
+#ifdef NDEBUG 
+#   undef NDEBUG 
+#endif
 #include <random>
 #include <complex>
 #include <algorithm>
@@ -7,6 +11,7 @@
 #include <memory>
 #include <fstream>
 #include <type_traist_notebook.hpp>
+#include <py_helper.hpp>
 
 template <typename T, typename = void>
 struct is_distribution : std::false_type {};
@@ -44,11 +49,11 @@ template<class T> using uniform_random = random_callable<T, typename uniform_dis
 template<class V1, class V2> inline auto compare_result(const V1& a, const V2& b){
     using real = real_t<typename V1::value_type>;
     const real threshold = std::pow(real(0.1), std::numeric_limits<real>::digits10);
-    if(a == b) return std::pair<real, real>{real(0), threshold};
+    if(a == b) return std::tuple<real, real, std::vector<real>>();
     std::vector<real> eps(a.size());
     std::transform(a.begin(), a.end(), b.begin(), eps.begin(),[](const auto a, const auto b){return std::abs((a - b) / a);});
     const real max_eps = *std::max_element(eps.begin(), eps.end());
-    return std::pair<real, real>{max_eps, threshold};
+    return std::make_tuple(max_eps, threshold, eps);
 }
 
 template<class T> inline auto init_input_vector(int size = 3 * 4){
@@ -99,3 +104,18 @@ struct Image{
         return pImage;
     }
 };
+
+
+namespace std
+{
+    template<> struct numeric_limits<std::complex<float>>{
+        constexpr static auto digits10 = 3;//numeric_limits<float>::digits10; 
+    };
+    template<> struct numeric_limits<std::complex<double>>{
+        constexpr static auto digits10 = numeric_limits<double>::digits10; 
+    };
+}
+
+template<class TVec> inline void imshow(const TVec& rowdata, const std::vector<int>& dim){
+    catch_py_error(py_plot().visulizer["display_image"](create_ndarray_from_vector(rowdata, dim)));
+}

@@ -140,7 +140,6 @@ void test_bandwidth(){
 }
 
 int main() {
-    cudaSetDevice(0);
     test_allocation_and_deallocation();
     test_memory_transfer();
     test_bandwidth();
