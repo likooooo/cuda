@@ -12,6 +12,7 @@
 #include <fstream>
 #include <type_traist_notebook.hpp>
 #include <py_helper.hpp>
+#include "cuda_vector.hpp"
 
 template <typename T, typename = void>
 struct is_distribution : std::false_type {};
