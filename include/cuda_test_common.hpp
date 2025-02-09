@@ -10,7 +10,7 @@
 #include <chrono>
 #include <memory>
 #include <fstream>
-#include <type_traist_notebook.hpp>
+#include <type_traist_notebook/type_traist.hpp>
 #include <py_helper.hpp>
 #include "cuda_vector.hpp"
 

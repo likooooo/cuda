@@ -6,6 +6,9 @@ project(cpp_cuda
 )
 find_package(py_visualizer REQUIRED)
 find_package(CUDAToolkit REQUIRED)
+find_package(type_traist_notebook REQUIRED)
+
+
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

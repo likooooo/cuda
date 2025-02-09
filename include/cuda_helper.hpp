@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
-#include "type_traist_notebook.hpp"
-
+#include <type_traist_notebook/type_traist.hpp>
 // CUDA API error checking
 #ifndef CUDA_RT_CALL
 #   define CUDA_RT_CALL( call )                                                                                           \
