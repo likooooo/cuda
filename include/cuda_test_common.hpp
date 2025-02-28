@@ -116,7 +116,3 @@ namespace std
         constexpr static auto digits10 = numeric_limits<double>::digits10; 
     };
 }
-
-template<class TVec> inline void imshow(const TVec& rowdata, const std::vector<int>& dim){
-    catch_py_error(py_plot().visulizer["display_image"](create_ndarray_from_vector(rowdata, dim)));
-}
