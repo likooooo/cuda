@@ -17,14 +17,8 @@ foreach(tool IN LISTS tools)
     list(APPEND TOOLS_TARGETS ${test_WLE})
 endforeach()
 
+copy_visualizer_files(cpp_cuda "$<TARGET_FILE_DIR:cpp_cuda>")
 
-add_custom_command(
-    TARGET cpp_cuda ${TOOLS_TARGETS} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "/usr/local/bin/visualizer.py"
-            "$<TARGET_FILE_DIR:cpp_cuda>/visualizer.py"
-    COMMENT "Copying visualizer.py to $<TARGET_FILE_DIR:cpp_cuda>/visualizer.py"
-)
 add_custom_command(
     TARGET cpp_cuda ${TOOLS_TARGETS} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
