@@ -3,7 +3,6 @@
 #ifdef NDEBUG 
 #   undef NDEBUG 
 #endif
-#include <random>
 #include <complex>
 #include <algorithm>
 #include <assert.h>
@@ -13,39 +12,6 @@
 #include <type_traist_notebook/type_traist.hpp>
 #include <py_helper.hpp>
 #include "cuda_vector.hpp"
-
-template <typename T, typename = void>
-struct is_distribution : std::false_type {};
-
-template <typename T>
-struct is_distribution<T, std::void_t<typename T::param_type>> : std::true_type {};
-template<class T, class = void> struct uniform_distribution;
-template<class T> struct uniform_distribution<T, std::enable_if_t<std::is_integral_v<T>>>{
-    using type = std::uniform_int_distribution<T>;
-};   
-template<class T> struct uniform_distribution<T, std::enable_if_t<std::is_floating_point_v<T>>>{
-    using type = std::uniform_real_distribution<T>;
-};
-
-template <class T, class TDistribution, class TEngine = std::mt19937>
-struct random_callable {
-    static_assert(is_distribution<TDistribution>::value, "TDistribution must be a distribution type");
-    using result_type = typename TDistribution::result_type;
-
-    random_callable(result_type lb = result_type{0}, result_type ub = result_type{1}) : engine_(std::random_device{}()), distribution_(TDistribution(lb, ub)){}
-    T operator()(){
-        if constexpr(is_complex_v<T>){
-            return T{distribution_(engine_), distribution_(engine_)};
-        }else{
-            return distribution_(engine_);
-        }
-    }
-private:
-    TEngine engine_;
-    TDistribution distribution_;
-};
-
-template<class T> using uniform_random = random_callable<T, typename uniform_distribution<real_t<T>>::type, std::mt19937>;
 
 template<class V1, class V2> inline auto compare_result(const V1& a, const V2& b){
     using real = real_t<typename V1::value_type>;
