@@ -111,7 +111,7 @@ void test_wrapper(const std::string& space = ""){
     (test_fft_ifft<T>(space, dim), ...);
 }
 int main(){
-    py_loader::init();
+    py_engine::init();
     printf("* Compare numpy.fft(FFTW) with cuda\n");
     for(int i = 0; i < 10; i++){
         printf("* iter-%d\n", i);
