@@ -1,0 +1,6 @@
+cd ${CMAKE_BINARY_DIR}/src && ${CMAKE_BINARY_DIR}/src/cuda_test_fft
+golden;
+cd ${CMAKE_BINARY_DIR}/src && ${CMAKE_BINARY_DIR}/src/cuda_device_info
+golden;
+cd ${CMAKE_BINARY_DIR}/src && ${CMAKE_BINARY_DIR}/src/cuda_test_basic_vt
+golden;
