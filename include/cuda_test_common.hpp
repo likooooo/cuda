@@ -49,7 +49,7 @@ struct Image{
         u.flag_meta.size = sizeof(T);
         u.flag_meta.status = (uint8_t)std::is_integral_v<T> + 
             (uint8_t)std::is_floating_point_v<T> * 2 +
-            (uint8_t)std::is_complex_v<T> * 4;
+            (uint8_t)is_complex_v<T> * 4;
         return u.n;
     }
     unsigned xsize{0}, ysize{0};
