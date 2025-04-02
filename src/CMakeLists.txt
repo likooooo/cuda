@@ -1,5 +1,5 @@
 add_library(cpp_cuda SHARED)
-file(GLOB cuda_source ${CMAKE_CURRENT_LIST_DIR}/*.cu)
+file(GLOB cuda_source ${CMAKE_CURRENT_LIST_DIR}/*.cu ${CMAKE_CURRENT_LIST_DIR}/gpu_backend.cpp)
 target_sources(cpp_cuda PRIVATE ${cuda_source})
 include_directories(${CMAKE_INC_DIR})
 target_include_directories(cpp_cuda PUBLIC ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES} ${py_visualizer_INCLUDE_DIRS})

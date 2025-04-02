@@ -159,6 +159,46 @@ template<class TAlloc1, class TAlloc2> inline auto operator << (std::vector<type
         CUDA_RT_CALL(cudaMemcpy(dest.data(), src.data(), sizeof(T) * src.size(), cudaMemcpyDefault));
     }
 }
+#if __cplusplus >= 202002L
+template<class TAlloc1, class T> inline auto operator << (std::vector<typename TAlloc1::value_type, TAlloc1>& dest, const std::span<T>& src_in_cpu){
+    using T2 = typename TAlloc1::value_type;
+
+    cuda::resize(dest, src_in_cpu.size() * sizeof(T)/ sizeof(T2));
+    constexpr bool has_device = cuda::is_device_vec_v<TAlloc1>;
+    constexpr bool has_pinned = cuda::is_pinned_vec_v<TAlloc1>;
+
+    if constexpr(has_device){
+        if constexpr(has_pinned){
+            CUDA_RT_CALL(cudaMemcpyAsync(dest.data(), src_in_cpu.data(), sizeof(T) * src_in_cpu.size(), cudaMemcpyDefault, 0));
+        }else{
+            CUDA_RT_CALL(cudaMemcpy(dest.data(), src_in_cpu.data(), sizeof(T) * src_in_cpu.size(), cudaMemcpyDefault));
+        }
+        return SyncProxy();
+    } 
+    else {
+        CUDA_RT_CALL(cudaMemcpy(dest.data(), src_in_cpu.data(), sizeof(T) * src_in_cpu.size(), cudaMemcpyDefault));
+    }
+}
+template<class TAlloc1, class T> inline auto operator << (std::span<T>& dest, const std::vector<typename TAlloc1::value_type, TAlloc1>& src){
+    using T2 = typename TAlloc1::value_type;
+
+    assert(src.size() == dest.size());
+    constexpr bool has_device = cuda::is_device_vec_v<TAlloc1>;
+    constexpr bool has_pinned = cuda::is_pinned_vec_v<TAlloc1>;
+
+    if constexpr(has_device){
+        if constexpr(has_pinned){
+            CUDA_RT_CALL(cudaMemcpyAsync(dest.data(), src.data(), sizeof(T) * src.size(), cudaMemcpyDefault, 0));
+        }else{
+            CUDA_RT_CALL(cudaMemcpy(dest.data(), src.data(), sizeof(T) * src.size(), cudaMemcpyDefault));
+        }
+        return SyncProxy();
+    } 
+    else {
+        CUDA_RT_CALL(cudaMemcpy(dest.data(), src.data(), sizeof(T) * src.size(), cudaMemcpyDefault));
+    }
+}
+#endif
 
 template<class T>inline void crop_image(T* pOut, const int ostride, const T* pIn, const int istride, const int sizex, const int sizey)
 {
