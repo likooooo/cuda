@@ -5,6 +5,7 @@ namespace uca
 {
     template<class T> void gpu_backend_impl(gpu_backend<T>& gpu)
     {
+        cpu.enable =  true;
         gpu.VtAdd = cuda::VtAdd<T>;
     }
     template<> gpu_backend<float>::gpu_backend(){gpu_backend_impl(*this);}
