@@ -6,6 +6,10 @@
 #include <cstring>
 // #include "model/Images.h"
 #include "cuda_helper.hpp"
+#if __cplusplus >= 202002L
+#include <span>
+#include <assert.h>
+#endif
 
 // 1D
 // pinned -> device   : cudaMemcpyAsync : cudaMemcpyHostToDevice

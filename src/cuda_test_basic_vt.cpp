@@ -8,10 +8,11 @@ template<class T> void test_add(const std::string space = ""){
     printf("*%s test cuda::VtAdd<%s>\n", space.c_str(), TypeReflection<T>().c_str());
     auto [array_x, array_y] = init_input_vector<T>();
 
-    cuda::device_vector<T> x, y; x << array_x; y << array_y;
-    cuda::VtAdd(x.size(), x.data(), y.data());
-    cuda::pageable_vector<T> result_from_gpu; result_from_gpu << y;
-    
+    // cuda::device_vector<T> x, y; x << array_x; y << array_y;
+    // cuda::VtAdd(x.size(), x.data(), y.data());
+    // cuda::pageable_vector<T> result_from_gpu; result_from_gpu << y;
+    cuda::pageable_vector<T> result_from_gpu = array_y;
+    cuda::VtAdd(array_x.size(), array_x.data(), result_from_gpu.data());
     std::transform(array_y.begin(), array_y.end(), array_x.begin(), array_y.begin(),[](auto a, auto b){return a + b;});
     assert(array_y == result_from_gpu);
     printf("*%s    test success\n", space.c_str());
@@ -72,7 +73,7 @@ void test_wrapper(const std::string& space = "")
 int main() 
 {
     printf("* compare gpu with cpu (basic calculation)\n");
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < 1000; i++){
         printf("* iter-%d\n", i);
         test_wrapper<float, double, std::complex<float>, std::complex<double>>("    ");
     }

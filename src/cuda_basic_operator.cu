@@ -1,44 +1,9 @@
 #include "cuda_basic_operator.h"
-#include "cuda_helper.hpp"
-#include "cuda_blas.hpp"
-
+#include "cuda_vector.hpp"
+#include <cuda_operator.cuh>
+#include <span>
 //== TODO list:
 // 1. expose threadsPerBlock to caller
-
- __both_side__ cuFloatComplex operator +(cuFloatComplex a, cuFloatComplex b)
-{
-    return cuCaddf(a, b);
-}
-__both_side__ cuDoubleComplex operator +(cuDoubleComplex a, cuDoubleComplex b)
-{
-    return cuCadd(a, b);
-}
-__both_side__ cuFloatComplex operator -(cuFloatComplex a, cuFloatComplex b)
-{
-    return cuCsubf(a, b);
-}
-__both_side__ cuDoubleComplex operator -(cuDoubleComplex a, cuDoubleComplex b)
-{
-    return cuCsub(a, b);
-}
-
-__both_side__ cuFloatComplex operator *(cuFloatComplex a, cuFloatComplex b)
-{
-    return  cuCmulf(a, b);
-}
-__both_side__ cuDoubleComplex operator *(cuDoubleComplex a, cuDoubleComplex b)
-{
-    return  cuCmul(a, b);
-}
-__both_side__ cuFloatComplex operator /(cuFloatComplex a, cuFloatComplex b)
-{
-    return cuCdivf(a, b);
-}
-
-__both_side__ cuDoubleComplex operator /(cuDoubleComplex a, cuDoubleComplex b)
-{
-    return cuCdiv(a, b);
-}
 
 template<class T> __global__ void vectorAdd(int n, const T* A, const T* B, T* C)
 {
@@ -61,13 +26,19 @@ template<class T> __global__ void vectorDiv(int n, const T* A, const T* B, T* C)
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i < n) C[i] = A[i] / B[i];
 }
-template <typename T> void VtAddImpl(const int n, const T *x, T *y)
+template <typename T> void VtAddImpl(const int n, const T *px, T *py)
 {
     using TCuda = cuda_t<T>;
     int threadsPerBlock = 256;
     int blocksPerGrid = (n + threadsPerBlock - 1) / threadsPerBlock;
-    vectorAdd<TCuda><<<blocksPerGrid, threadsPerBlock>>>(n, (const TCuda*)y, (const TCuda*)x, (TCuda*)y);
-    cudaDeviceSynchronize();
+    
+    cuda::device_vector<T> x, y; 
+    T* p = const_cast<T*>(px);
+    x << std::span<T>(p, p + n);
+    std::span<T> array_y(py, py+n);
+    y << array_y;
+    vectorAdd<TCuda><<<blocksPerGrid, threadsPerBlock>>>(n, (const TCuda*)y.data(), (const TCuda*)x.data(), (TCuda*)y.data());
+    array_y << y;
     CUDA_RT_LAST_ERROR();
 }
 template <typename T> void VtSubImpl(const int n, const T *x, T *y)
