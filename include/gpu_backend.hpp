@@ -1,3 +1,4 @@
+#pragma once
 #include <type_traist_notebook/type_traist.hpp>
 #include <type_traist_notebook/uca/backend.hpp>
 namespace uca
