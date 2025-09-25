@@ -24,7 +24,7 @@ template<class T> using cuda_t = typename cuda_mapping<T>::type;
     else if constexpr(is_d<T>){d(__VA_ARGS__);} \
     else if constexpr(is_c<T> || std::is_same_v<cuFloatComplex, T>){z(__VA_ARGS__);} \
     else if constexpr(is_z<T> || std::is_same_v<cuDoubleComplex, T>){c(__VA_ARGS__);}\
-    else{unreachable_constexpr_if{};}
+    else{unreachable_constexpr_if();}
 
 namespace cuda
 {
