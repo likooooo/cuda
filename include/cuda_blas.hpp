@@ -20,11 +20,11 @@ template<> struct cuda_mapping<std::complex<double>>{using type = cuDoubleComple
 template<class T> using cuda_t = typename cuda_mapping<T>::type;
 
 #define REPEAT_CODE(T, s,d, z,c, ...) \
-    if constexpr(std::is_same<float, T>::value){s(__VA_ARGS__);} \
-    else if constexpr(std::is_same_v<double, T>){d(__VA_ARGS__);} \
-    else if constexpr(std::is_same_v<std::complex<float>, T> || std::is_same_v<cuFloatComplex, T>){z(__VA_ARGS__);} \
-    else if constexpr(std::is_same_v<std::complex<double>, T> || std::is_same_v<cuDoubleComplex, T>){c(__VA_ARGS__);}\
-    else{unreachable_constexpr_if<int>{};}
+    if constexpr(is_s<T>){s(__VA_ARGS__);} \
+    else if constexpr(is_d<T>){d(__VA_ARGS__);} \
+    else if constexpr(is_c<T> || std::is_same_v<cuFloatComplex, T>){z(__VA_ARGS__);} \
+    else if constexpr(is_z<T> || std::is_same_v<cuDoubleComplex, T>){c(__VA_ARGS__);}\
+    else{unreachable_constexpr_if{};}
 
 namespace cuda
 {
