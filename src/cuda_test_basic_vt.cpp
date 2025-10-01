@@ -12,17 +12,17 @@ template<class T> void test_add(const std::string space = ""){
     // cuda::VtAdd(x.size(), x.data(), y.data());
     // cuda::pageable_vector<T> result_from_gpu; result_from_gpu << y;
     cuda::pageable_vector<T> result_from_gpu = array_y;
-    cuda::VtAdd(array_x.size(), array_x.data(), result_from_gpu.data());
+    cuda::vec::self_add(array_x.size(), array_x.data(), result_from_gpu.data());
     std::transform(array_y.begin(), array_y.end(), array_x.begin(), array_y.begin(),[](auto a, auto b){return a + b;});
     assert(array_y == result_from_gpu);
     printf("*%s    test success\n", space.c_str());
 }
 template<class T> void test_sub(const std::string space = ""){
-    printf("*%s test cuda::VtSub<%s>\n", space.c_str(), TypeReflection<T>().c_str());
+    printf("*%s test cuda::vec::self_sub<%s>\n", space.c_str(), TypeReflection<T>().c_str());
     auto [array_x, array_y] = init_input_vector<T>();
 
     cuda::device_vector<T> x, y; x << array_x; y << array_y;
-    cuda::VtSub(x.size(), x.data(), y.data());
+    cuda::vec::self_sub(x.size(), x.data(), y.data());
     cuda::pageable_vector<T> result_from_gpu; result_from_gpu << y;
     
     std::transform(array_y.begin(), array_y.end(), array_x.begin(), array_y.begin(),[](auto a, auto b){return a - b;});
@@ -30,11 +30,11 @@ template<class T> void test_sub(const std::string space = ""){
     printf("*%s    test success\n", space.c_str());
 }
 template<class T> void test_mul(const std::string space = ""){
-    printf("*%s test cuda::VtMul<%s>\n", space.c_str(), TypeReflection<T>().c_str());
+    printf("*%s test cuda::vec::self_mul<%s>\n", space.c_str(), TypeReflection<T>().c_str());
     auto [array_x, array_y] = init_input_vector<T>();
 
     cuda::device_vector<T> x, y; x << array_x; y << array_y;
-    cuda::VtMul(x.size(), x.data(), y.data());
+    cuda::vec::self_mul(x.size(), x.data(), y.data());
     cuda::pageable_vector<T> result_from_gpu; result_from_gpu << y;
     
     std::transform(array_y.begin(), array_y.end(), array_x.begin(), array_y.begin(),[](auto a, auto b){return a * b;});
@@ -46,11 +46,11 @@ template<class T> void test_mul(const std::string space = ""){
     printf("*%s    test success\n", space.c_str());
 }
 template<class T> void test_div(const std::string space = ""){
-    printf("*%s test cuda::VtDiv<%s>\n", space.c_str(), TypeReflection<T>().c_str());
+    printf("*%s test cuda::vec::self_div<%s>\n", space.c_str(), TypeReflection<T>().c_str());
     auto [array_x, array_y] = init_input_vector<T>();
 
     cuda::device_vector<T> x, y; x << array_x; y << array_y;
-    cuda::VtDiv(x.size(), x.data(), y.data());
+    cuda::vec::self_div(x.size(), x.data(), y.data());
     cuda::pageable_vector<T> result_from_gpu; result_from_gpu << y;
     
     std::transform(array_y.begin(), array_y.end(), array_x.begin(), array_y.begin(),[](auto a, auto b){return a / b;});

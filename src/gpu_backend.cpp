@@ -8,7 +8,7 @@ namespace uca
     template<class T> void gpu_backend_impl(gpu_backend<T>& gpu)
     {
         gpu.enable =  true;
-        gpu.VtAdd = cuda::VtAdd<T>;
+        gpu.VtAdd = cuda::vec::self_add<T>;
         gpu.integral_x = cuda::integral_x<T>;
         gpu.integral_y = cuda::integral_y<T>;
     }

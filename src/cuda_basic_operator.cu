@@ -68,25 +68,25 @@ template <typename T> void VtDivImpl(const int n, const T *x, T *y)
     cudaDeviceSynchronize();
     CUDA_RT_LAST_ERROR();
 }
-namespace cuda
+namespace cuda::vec
 {
-    template<>void VtAdd<float>(const int n, const float *x, float *y){ VtAddImpl(n, x, y);}
-    template<>void VtAdd<double>(const int n, const double *x, double *y){ VtAddImpl(n, x, y);}
-    template<>void VtAdd<std::complex<float>>(const int n, const std::complex<float> *x, std::complex<float> *y){ VtAddImpl(n, x, y);}
-    template<>void VtAdd<std::complex<double>>(const int n, const std::complex<double> *x, std::complex<double> *y){ VtAddImpl(n, x, y);}
+    template<>void self_add<float>(const int n, const float *x, float *y){ VtAddImpl(n, x, y);}
+    template<>void self_add<double>(const int n, const double *x, double *y){ VtAddImpl(n, x, y);}
+    template<>void self_add<std::complex<float>>(const int n, const std::complex<float> *x, std::complex<float> *y){ VtAddImpl(n, x, y);}
+    template<>void self_add<std::complex<double>>(const int n, const std::complex<double> *x, std::complex<double> *y){ VtAddImpl(n, x, y);}
 
-    template<>void VtSub<float>(const int n, const float *x, float *y){ VtSubImpl(n, x, y);}
-    template<>void VtSub<double>(const int n, const double *x, double *y){ VtSubImpl(n, x, y);}
-    template<>void VtSub<std::complex<float>>(const int n, const std::complex<float> *x, std::complex<float> *y){ VtSubImpl(n, x, y);}
-    template<>void VtSub<std::complex<double>>(const int n, const std::complex<double> *x, std::complex<double> *y){ VtSubImpl(n, x, y);}
+    template<>void self_sub<float>(const int n, const float *x, float *y){ VtSubImpl(n, x, y);}
+    template<>void self_sub<double>(const int n, const double *x, double *y){ VtSubImpl(n, x, y);}
+    template<>void self_sub<std::complex<float>>(const int n, const std::complex<float> *x, std::complex<float> *y){ VtSubImpl(n, x, y);}
+    template<>void self_sub<std::complex<double>>(const int n, const std::complex<double> *x, std::complex<double> *y){ VtSubImpl(n, x, y);}
 
-    template<>void VtMul<float>(const int n, const float *x, float *y){ VtMulImpl(n, x, y);}
-    template<>void VtMul<double>(const int n, const double *x, double *y){ VtMulImpl(n, x, y);}
-    template<>void VtMul<std::complex<float>>(const int n, const std::complex<float> *x, std::complex<float> *y){ VtMulImpl(n, x, y);}
-    template<>void VtMul<std::complex<double>>(const int n, const std::complex<double> *x, std::complex<double> *y){ VtMulImpl(n, x, y);}
+    template<>void self_mul<float>(const int n, const float *x, float *y){ VtMulImpl(n, x, y);}
+    template<>void self_mul<double>(const int n, const double *x, double *y){ VtMulImpl(n, x, y);}
+    template<>void self_mul<std::complex<float>>(const int n, const std::complex<float> *x, std::complex<float> *y){ VtMulImpl(n, x, y);}
+    template<>void self_mul<std::complex<double>>(const int n, const std::complex<double> *x, std::complex<double> *y){ VtMulImpl(n, x, y);}
     
-    template<>void VtDiv<float>(const int n, const float *x, float *y){ VtDivImpl(n, x, y);}
-    template<>void VtDiv<double>(const int n, const double *x, double *y){ VtDivImpl(n, x, y);}
-    template<>void VtDiv<std::complex<float>>(const int n, const std::complex<float> *x, std::complex<float> *y){ VtDivImpl(n, x, y);}
-    template<>void VtDiv<std::complex<double>>(const int n, const std::complex<double> *x, std::complex<double> *y){ VtDivImpl(n, x, y);}
+    template<>void self_div<float>(const int n, const float *x, float *y){ VtDivImpl(n, x, y);}
+    template<>void self_div<double>(const int n, const double *x, double *y){ VtDivImpl(n, x, y);}
+    template<>void self_div<std::complex<float>>(const int n, const std::complex<float> *x, std::complex<float> *y){ VtDivImpl(n, x, y);}
+    template<>void self_div<std::complex<double>>(const int n, const std::complex<double> *x, std::complex<double> *y){ VtDivImpl(n, x, y);}
 }
