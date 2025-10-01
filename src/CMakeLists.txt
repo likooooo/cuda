@@ -1,5 +1,5 @@
 add_library(cpp_cuda SHARED)
-file(GLOB cuda_source ${CMAKE_CURRENT_LIST_DIR}/*.cu ${CMAKE_CURRENT_LIST_DIR}/gpu_backend.cpp)
+file(GLOB cuda_source ${CMAKE_CURRENT_LIST_DIR}/*.cu)
 
 message(STATUS ${cuda_source})
 target_sources(cpp_cuda PRIVATE ${cuda_source})
